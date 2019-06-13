@@ -1,0 +1,21 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+
+server:
+  tomcat:
+    basedir: tomcat
+    accesslog:
+      enabled: true
+      prefix: access_log
+      suffix: .log
+      pattern: "%h %l %u %t %r %s %b %D"
+      file-date-format: ".yyyy-MM-dd"
+      rename-on-rotate: true
+
+logging:
+  config: classpath:log4j2-spring-dev.xml
+#  level:
+#    root: warn
+#    com.practice.springboot.log4j2: info

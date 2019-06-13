@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 指定默认日志级别为WARN-->
+<Configuration status="WARN" monitorInterval="300"><!-- monitorInterval, 每300秒刷新配置 -->
+    <Properties>
+        <Property name="LOG_HOME">logs</Property>
+        <Property name="FILE_NAME">myLog-dev</Property>
+        <Property name="COMMON_ERROR">common-error</Property>
+        <Property name="APP">app</Property>
+        <Property name="MIDDLEWARE">middleware-info</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="MyFile"
+                                 fileName="${LOG_HOME}/${FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd-HH}-%i.log"><!-- filePattern 为作古日志文件的格式，并确定最小单位时间为HH即为小时-->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies><!-- 有一个策略满足则新建日志文件 -->
+                <TimeBasedTriggeringPolicy interval="1"/> <!-- 每1个最小单位时间新建日志文件 -->
+                <!--<SizeBasedTriggeringPolicy size="1 MB"/>-->
+            </Policies>
+            <DefaultRolloverStrategy max="32"/><!-- DefaultRolloverStrategy  指定最多保存的文件个数-->
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="common-error-appender"
+                                 fileName="${LOG_HOME}/${COMMON_ERROR}.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/${COMMON_ERROR}-%d{yyyy-MM-dd-HH}-%i.log"><!-- filePattern 为作古日志文件的格式，并确定最小单位时间为HH即为小时-->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/> <!-- 每1个最小单位时间新建日志文件 -->
+            </Policies>
+            <DefaultRolloverStrategy max="32"/><!-- DefaultRolloverStrategy  指定最多保存的文件个数-->
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="app-appender"
+                                 fileName="${LOG_HOME}/${APP}.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/${APP}-%d{yyyy-MM-dd-HH}-%i.log"><!-- filePattern 为作古日志文件的格式，并确定最小单位时间为HH即为小时-->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/> <!-- 每1个最小单位时间新建日志文件 -->
+            </Policies>
+            <DefaultRolloverStrategy max="32"/><!-- DefaultRolloverStrategy  指定最多保存的文件个数-->
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="middleware-appender"
+                                 fileName="${LOG_HOME}/${MIDDLEWARE}.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/${MIDDLEWARE}-%d{yyyy-MM-dd-HH}-%i.log"><!-- filePattern 为作古日志文件的格式，并确定最小单位时间为HH即为小时-->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/> <!-- 每1个最小单位时间新建日志文件 -->
+            </Policies>
+            <DefaultRolloverStrategy max="7"/><!-- DefaultRolloverStrategy  指定最多保存的文件个数-->
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="middleware-appender" level="info"/>
+            <AppenderRef ref="common-error-appender" level="error"/>
+        </Root>
+        <Logger name="myLog" level="info" additivity="false">
+            <AppenderRef ref="MyFile" level="info"/>
+            <AppenderRef ref="common-error-appender" level="error"/>
+        </Logger>
+        <Logger name="com.practice.springboot.log4j2" level="info" additivity="false">
+            <AppenderRef ref="app-appender" level="info"/>
+            <AppenderRef ref="common-error-appender" level="error"/>
+        </Logger>
+    </Loggers>
+</Configuration>
